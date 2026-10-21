@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Un petit mot d'excuse ♥</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+  /* ===== Palette rose façon Stardew ===== */
+  :root {
+    --rose-clair:   #ffd9e8;
+    --rose-moyen:   #ffb3d1;
+    --rose-fonce:   #e0568c;
+    --rose-bordure: #8c2a52;
+    --brun-terre:   #95550e;
+    --creme:        #fff5f9;
+    --vert-feuille: #7bbf6a;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    border-radius: 0; /* pas d'arrondis, esprit pixel */
+  }
+
+  body {
+    font-family: 'Press Start 2P', monospace;
+    background-color: var(--rose-clair);
+    /* petit damier subtil pour un fond "texture" */
+    background-image:
+      linear-gradient(45deg, rgba(255,255,255,0.25) 25%, transparent 25%),
+      linear-gradient(-45deg, rgba(255,255,255,0.25) 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, rgba(255,255,255,0.25) 75%),
+      linear-gradient(-45deg, transparent 75%, rgba(255,255,255,0.25) 75%);
+    background-size: 32px 32px;
+    background-position: 0 0, 0 16px, 16px -16px, -16px 0;
+
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    image-rendering: pixelated;
+  }
+
+  /* ===== La carte / boîte de dialogue ===== */
+  .carte {
+    background-color: var(--creme);
+    border: 6px solid var(--rose-bordure);
+    /* ombre "pixel" décalée, pas floue */
+    box-shadow: 10px 10px 0 var(--rose-fonce);
+    max-width: 560px;
+    width: 100%;
+    padding: 32px 28px 36px;
+    position: relative;
+    text-align: center;
+  }
+
+  /* Petit coeur pixel décoratif en haut */
+  .coeur {
+    font-size: 28px;
+    line-height: 1;
+    margin-bottom: 18px;
+    animation: battement 1.2s ease-in-out infinite;
+    display: inline-block;
+  }
+  @keyframes battement {
+    0%, 100% { transform: scale(1); }
+    50%      { transform: scale(1.25); }
+  }
+
+  h1 {
+    font-size: 18px;
+    color: var(--rose-fonce);
+    line-height: 1.8;
+    text-shadow: 2px 2px 0 var(--rose-moyen);
+    margin-bottom: 24px;
+  }
+
+  p {
+    font-size: 10px;
+    line-height: 2.2;
+    color: var(--brun-terre);
+    margin-bottom: 20px;
+  }
+
+  /* ===== Bouton "pixel" ===== */
+  .bouton {
+    display: inline-block;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 11px;
+    color: var(--creme);
+    background-color: var(--rose-fonce);
+    border: 4px solid var(--rose-bordure);
+    padding: 14px 22px;
+    cursor: pointer;
+    text-decoration: none;
+    box-shadow: 5px 5px 0 var(--rose-bordure);
+    transition: none; /* pas de transition fluide, esprit rétro */
+    margin-top: 8px;
+  }
+  .bouton:hover {
+    background-color: var(--rose-moyen);
+    color: var(--rose-bordure);
+  }
+  .bouton:active {
+    transform: translate(5px, 5px);
+    box-shadow: 0 0 0 var(--rose-bordure);
+  }
+
+  /* ===== Petites fleurs pixel aux coins ===== */
+  .fleur {
+    position: absolute;
+    font-size: 18px;
+    line-height: 1;
+  }
+  .fleur.hg { top: 8px; left: 10px; }
+  .fleur.hd { top: 8px; right: 10px; }
+  .fleur.bg { bottom: 8px; left: 10px; }
+  .fleur.bd { bottom: 8px; right: 10px; }
+
+  /* ===== Message caché qui apparaît au clic ===== */
+  #reponse {
+    margin-top: 24px;
+    font-size: 10px;
+    line-height: 2;
+    color: var(--rose-fonce);
+    min-height: 40px;
+  }
+
+  /* ===== Responsive ===== */
+  @media (max-width: 480px) {
+    h1 { font-size: 14px; }
+    p, #reponse { font-size: 8px; }
+    .bouton { font-size: 9px; padding: 12px 16px; }
+    .carte { padding: 24px 18px 28px; }
+  }
+</style>
+</head>
+<body>
+
+  <main class="carte">
+    <span class="fleur hg">🌸</span>
+    <span class="fleur hd">🌷</span>
+    <span class="fleur bg">🌼</span>
+    <span class="fleur bd">🌺</span>
+
+    <div class="coeur">♥</div>
+
+    <h1>Je suis vraiment<br>désolé...</h1>
+
+    <p>
+      SUMIMASEN BRO ! <br>
+      <br>
+      
+    </p>
+
+    <p>
+      Est-ce que tu voudras bien<br>
+      me pardonner ? (Stp wola)
+    </p>
+
+    <button class="bouton" id="pardon">Clique ici</button>
+
+    <div id="reponse"></div>
+  </main>
+
+<script>
+  const bouton = document.getElementById('pardon');
+  const reponse = document.getElementById('reponse');
+
+  const messages = [
+    "Merci Soso <3",
+    "Six Seven",
+    "Couscous",
+    "C'est quoi 13 somalien sur un fond blanc ? Un code barre",
+    "En vrai les dabs c'etais grave stylé "
+  ];    
+
+  let index = 0;
+
+  bouton.addEventListener('click', () => {
+    reponse.textContent = messages[index];
+    index = (index + 1) % messages.length;
+    if (index === 0) {
+      // petit bonus quand on a tout vu
+      bouton.textContent = "Encore ?";
+    }
+  });
+</script>
+
+</body>
+</html>
